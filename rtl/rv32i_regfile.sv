@@ -5,8 +5,8 @@ input logic write_en,
 
 input logic [4:0] rs1_addr,
 input logic [4:0] rs2_addr,
-input logic [4:0] rd_addr,
-input logic [31:0] rd_data,
+input logic [4:0] wr_addr,
+input logic [31:0] wr_data,
 
 output logic [31:0] rs1_data,
 output logic [31:0] rs2_data
@@ -28,8 +28,8 @@ logic [31:0] regs [31:0];
 
 always_ff @(posedge clk) begin
 //this block describes sequential/register logic, its the write block
-    if (write_en && rd_addr != 5'd0)
-        regs[rd_addr] <= rd_data;
+    if (write_en && wr_addr != 5'd0)
+        regs[wr_addr] <= wr_data;
     //cant write into register x0 because RISC-V uses it as a zero value, a RISC-V rule
 end
 
