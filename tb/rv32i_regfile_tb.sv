@@ -3,12 +3,12 @@
 module rv32i_regfile_tb;
     logic clk;
     logic write_en;
-    logic [4:0] rs1_addr;
-    logic [4:0] rs2_addr;
-    logic [4:0] wr_addr;
-    logic [31:0] wr_data;
-    logic [31:0] rs1_data;
-    logic [31:0] rs2_data;
+    logic [4:0] rs1_addr; //which register i want to read from
+    logic [4:0] rs2_addr;//which register i want to read from
+    logic [4:0] wr_addr; //which register i want to write to
+    logic [31:0] wr_data; // what is the data i want to write
+    logic [31:0] rs1_data; //what is the data at the register i want to read from
+    logic [31:0] rs2_data; //what is the data at the register i want to read from
 
     //instantiate
     rv32i_regfile dut (
