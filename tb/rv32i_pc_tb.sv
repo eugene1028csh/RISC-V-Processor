@@ -31,6 +31,9 @@ module rv32i_pc_tb;
 
     reset = 0;
     next_pc = 32'h00000004;
+    //The PC increases by 4 because RISC-V memory is byte-addressed and each standard RV32I instruction occupies 4 bytes.
+    //Byte-addressed means each memory address points to 1 byte = 8 bits.
+    //Since one RV32I instruction is 4 bytes, it occupies four addresses, which is why the next instruction starts at PC + 4.
 
     @(posedge clk);
     #1;
