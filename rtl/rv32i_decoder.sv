@@ -27,9 +27,8 @@ typedef enum logic [1:0] {
 
 
 module rv32i_decoder(
-
+    //ports
     input  logic [31:0] instruction,
-
     output logic        reg_write,
     output logic        alu_src,
     output logic        mem_write,
@@ -39,7 +38,7 @@ module rv32i_decoder(
     output alu_op_t      alu_op,
     output imm_type_t    imm_type
 );
-
+    //internal signals
     logic [6:0] opcode;
     logic [2:0] funct3;
     logic [6:0] funct7;
@@ -56,9 +55,10 @@ always_comb begin
     branch     = 1'b0;
     jump       = 1'b0;
     alu_op     = ALU_ADD;
-    imm_type   = IMM_I;  
+    imm_type   = IMM_I;
 case (opcode)
-    7'b0110011: begin
+    7'b0110011: begin //If the instruction opcode is 0110011, this is an R-type ALU instruction
+    //Control signals for all R-type instructions
             reg_write  = 1'b1;
             alu_src    = 1'b0;
             mem_write  = 1'b0;
@@ -93,8 +93,11 @@ case (opcode)
 
             endcase
         end
+
+        //if the opcode is not 0110011, don’t enter the R-type decode block.
         default: begin
             // Keep safe defaults
+
         end
 
 
