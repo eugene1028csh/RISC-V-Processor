@@ -76,12 +76,14 @@ module rv32i_imme_gnrtr_tb;
         #1;
 
         assert (immediate == 32'hFFFFFFFC)
-            else $error("B-type -4 test failed");
+            else $error("B-type -ve test failed");
 
         //U-type test
         instruction = 32'd0;
         instruction [31:12] = 20'h12345;
         imm_type = IMM_U;
+
+        #1;
 
         assert (immediate == 32'h12345000)
             else $error("U type test failed");
@@ -91,8 +93,37 @@ module rv32i_imme_gnrtr_tb;
         instruction [31:12] = 20'hFFFFF;
         imm_type = IMM_U;
 
+        #1;
+
         assert (immediate == 32'hFFFFF000)
-            else $error("U type test failed");
+            else $error("U type -ve test failed");
+
+        // J-type +8 test
+        instruction = 32'd0;
+        instruction[31]    = 1'b0;          // imm[20]
+        instruction[19:12] = 8'b00000000;   // imm[19:12]
+        instruction[20]    = 1'b0;          // imm[11]
+        instruction[30:21] = 10'b0000000100; // imm[10:1]
+        imm_type = IMM_J;
+
+        #1;
+
+        assert (immediate == 32'd8)
+            else $error("J-type +8 test failed");
+
+
+        // J-type -4 test
+        instruction = 32'd0;
+        instruction[31]    = 1'b1;          // imm[20]
+        instruction[19:12] = 8'b11111111;   // imm[19:12]
+        instruction[20]    = 1'b1;          // imm[11]
+        instruction[30:21] = 10'b1111111110; // imm[10:1]
+        imm_type = IMM_J;
+
+        #1;
+
+        assert (immediate == 32'hFFFFFFFC)
+            else $error("J-type -4 test failed");
 
 
         $display("immediate generator test passed!");

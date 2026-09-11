@@ -38,6 +38,8 @@ always_comb begin
     */
     IMM_U : immediate ={instruction[31:12], 12'b0};
 
+    IMM_J : immediate ={{11{instruction[31]}},instruction[31], instruction[19:12], instruction[20], instruction[30:21], 1'b0};
+
     default  : immediate = 32'd0;
 
     endcase
