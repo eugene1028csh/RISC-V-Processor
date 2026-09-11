@@ -36,6 +36,7 @@ always_comb begin
     The confusing part is that instruction[31] appears twice: once to fill the upper
     19 sign-extension bits, and once because it is also the actual imm[12] bit.
     */
+    IMM_U : immediate ={instruction[31:12], 12'b0};
 
     default  : immediate = 32'd0;
 

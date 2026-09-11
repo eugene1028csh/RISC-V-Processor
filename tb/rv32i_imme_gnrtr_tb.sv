@@ -65,8 +65,6 @@ module rv32i_imme_gnrtr_tb;
         assert (immediate == 32'd8)
             else $error("B-type +8 test failed");
 
-        $display("immediate generator test passed!");
-
         //-ve type-B test
         instruction = 32'd0;
         instruction[31]    = 1'b1;       // imm[12]
@@ -79,6 +77,26 @@ module rv32i_imme_gnrtr_tb;
 
         assert (immediate == 32'hFFFFFFFC)
             else $error("B-type -4 test failed");
+
+        //U-type test
+        instruction = 32'd0;
+        instruction [31:12] = 20'h12345;
+        imm_type = IMM_U;
+
+        assert (immediate == 32'h12345000)
+            else $error("U type test failed");
+
+        //U type -ve test
+        instruction = 32'd0;
+        instruction [31:12] = 20'hFFFFF;
+        imm_type = IMM_U;
+
+        assert (immediate == 32'hFFFFF000)
+            else $error("U type test failed");
+
+
+        $display("immediate generator test passed!");
+
 
     $finish;
     end
