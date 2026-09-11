@@ -52,8 +52,34 @@ module rv32i_imme_gnrtr_tb;
         assert (immediate == 32'hFFFFFFFF)
             else $error("Negative S-Type test failed");
 
+        //type B test
+        instruction = 32'd0;
+        instruction[31]    = 1'b0;
+        instruction[30:25] = 6'b000000;
+        instruction[11:8]  = 4'b0100;
+        instruction[7]     = 1'b0;
+        imm_type = IMM_B;
+
+        #1;
+
+        assert (immediate == 32'd8)
+            else $error("B-type +8 test failed");
 
         $display("immediate generator test passed!");
+
+        //-ve type-B test
+        instruction = 32'd0;
+        instruction[31]    = 1'b1;       // imm[12]
+        instruction[30:25] = 6'b111111;  // imm[10:5]
+        instruction[11:8]  = 4'b1110;    // imm[4:1]
+        instruction[7]     = 1'b1;       // imm[11]
+        imm_type = IMM_B;
+
+        #1;
+
+        assert (immediate == 32'hFFFFFFFC)
+            else $error("B-type -4 test failed");
+
     $finish;
     end
 
