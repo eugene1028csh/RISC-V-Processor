@@ -88,7 +88,7 @@ module rv32i_imme_gnrtr_tb;
         assert (immediate == 32'h12345000)
             else $error("U type test failed");
 
-        //U type -ve test
+        //U-type high-bit test
         instruction = 32'd0;
         instruction [31:12] = 20'hFFFFF;
         imm_type = IMM_U;
