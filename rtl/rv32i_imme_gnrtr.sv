@@ -1,11 +1,4 @@
-typedef enum logic [2:0] {
-    IMM_I,
-    IMM_S,
-    IMM_B,
-    IMM_U,
-    IMM_J
-} imm_type_t;
-
+import rv32i_types::*;
 
 module rv32i_imme_gnrtr(
 input logic [31:0] instruction,

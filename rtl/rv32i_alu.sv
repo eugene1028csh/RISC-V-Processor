@@ -1,15 +1,4 @@
-typedef enum logic [3:0]{ //4 bits for each enum value
-    ALU_ADD,
-    ALU_SUB,
-    ALU_AND,
-    ALU_OR,
-    ALU_XOR,
-    ALU_SLL,
-    ALU_SRL,
-    ALU_SRA,
-    ALU_SLT,
-    ALU_SLTU
-} alu_op_t;
+import rv32i_types::*;
 
 module rv32i_alu (
     input logic [31:0] operand_a,
