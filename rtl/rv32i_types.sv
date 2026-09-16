@@ -27,3 +27,6 @@ package rv32i_types;
     } result_src_t;
 
 endpackage
+
+
+//import into modules using "import rv32i_types::*;", * means import all definitions from rv32i_types

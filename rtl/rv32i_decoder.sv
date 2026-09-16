@@ -68,13 +68,48 @@ case (opcode)
             endcase
         end
 
-        //if the opcode is not 0110011, don’t enter the R-type decode block.
-        default: begin
-            // Keep safe defaults
+    7'b0010011: begin   //Itype instructions
+        reg_write  = 1'b1;
+        alu_src    = 1'b1;
+        mem_write  = 1'b0;
+        result_src = RES_ALU;
+        branch     = 1'b0;
+        jump       = 1'b0;
+        imm_type   = IMM_I;
 
-        end
+        case (funct3)
 
+            3'b000: alu_op = ALU_ADD;    // ADDI
 
-            endcase
+            3'b010: alu_op = ALU_SLT;    // SLTI
+
+            3'b011: alu_op = ALU_SLTU;   // SLTIU
+
+            3'b100: alu_op = ALU_XOR;    // XORI
+
+            3'b110: alu_op = ALU_OR;     // ORI
+
+            3'b111: alu_op = ALU_AND;    // ANDI
+
+            3'b001: alu_op = ALU_SLL;    // SLLI
+
+            3'b101: begin
+                if (funct7 == 7'b0100000)
+                    alu_op = ALU_SRA;    // SRAI
+                else
+                    alu_op = ALU_SRL;    // SRLI
+            end
+
+            default: alu_op = ALU_ADD;
+
+        endcase
     end
+
+    //if the opcode is not 0110011, don’t enter the R-type decode block.
+    default: begin
+        // Keep safe defaults
+
+    end
+endcase
+end
 endmodule
