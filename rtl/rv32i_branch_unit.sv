@@ -40,8 +40,6 @@ always_comb begin
         if (rs1_data >= rs2_data)
             branch_taken = 1'b1;
     end
-    
-    end
 
     default:;
 
