@@ -105,6 +105,28 @@ case (opcode)
         endcase
     end
 
+    7'b000011: begin //Load
+        reg_write  = 1'b1;
+        alu_src    = 1'b1;
+        mem_write  = 1'b0;
+        result_src = RES_MEM;
+        branch     = 1'b0;
+        jump       = 1'b0;
+        imm_type   = IMM_I;
+        alu_op     = ALU_ADD;
+    end
+
+    7'b0100011: begin   //Store
+        reg_write  = 1'b0;
+        alu_src    = 1'b1;
+        mem_write  = 1'b1;
+        result_src = RES_ALU;
+        branch     = 1'b0;
+        jump       = 1'b0;
+        imm_type   = IMM_S;
+        alu_op     = ALU_ADD;
+    end
+
     //if the opcode is not 0110011, don’t enter the R-type decode block.
     default: begin
         // Keep safe defaults
