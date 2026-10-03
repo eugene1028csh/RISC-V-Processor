@@ -205,6 +205,68 @@ module rv32i_decoder_tb;
     end
     endtask
 
+    task test_lui;
+    begin
+        instruction = 32'b0;
+        instruction[6:0] = 7'b0110111; 
+
+        #1;
+        assert (reg_write == 1'b1)
+            else $error("LUI reg_write failed");
+
+        assert (mem_write == 1'b0)
+            else $error("LUI mem_write failed");
+
+        assert (branch == 1'b0)
+            else $error("LUI branch failed");
+
+        assert (jump == 1'b0)
+            else $error("LUI jump failed");
+
+        assert (imm_type == IMM_U)
+            else $error("LUI imm_type failed");
+
+        assert (result_src == RES_IMM)
+            else $error("LUI result_src failed");
+    end
+    endtask
+
+    task test_auipc;
+    begin
+        instruction = 32'b0;
+        instruction[6:0] = 7'b0010111; 
+
+        #1;
+        assert (reg_write == 1'b1)
+            else $error("AUIPC reg_write failed");
+
+        assert (mem_write == 1'b0)
+            else $error("AUIPC mem_write failed");
+
+        assert (branch == 1'b0)
+            else $error("AUIPC branch failed");
+
+        assert (jump == 1'b0)
+            else $error("AUIPC jump failed");
+
+        assert (imm_type == IMM_U)
+            else $error("AUIPC imm_type failed");
+
+        assert (result_src == RES_ALU)
+            else $error("AUIPC result_src failed");
+
+        assert (alu_op == ALU_ADD)
+            else $error("AUIPC alu_op failed");
+        
+        assert (alu_src == 1'b1)
+            else $error("AUIPC alu_src failed");
+
+        assert (alu_a_pc == 1'b1)
+            else $error("AUIPC alu_a_pc failed");
+
+    end
+    endtask
+
 
     initial begin
     // R-TYPE TESTS

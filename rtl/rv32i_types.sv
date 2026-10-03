@@ -23,7 +23,8 @@ package rv32i_types;
     typedef enum logic [1:0] {
         RES_ALU,
         RES_MEM,
-        RES_PC4
+        RES_PC4,
+        RES_IMM
     } result_src_t;
 
 endpackage

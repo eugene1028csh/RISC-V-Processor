@@ -11,7 +11,9 @@ module rv32i_decoder(
     output logic        jump,
     output logic        jalr,
     output alu_op_t      alu_op,
-    output imm_type_t    imm_type
+    output imm_type_t    imm_type,
+    output logic        alu_a_pc
+    //alu_a_pc = 0  means ALU A comes from rs1, otherwise ALU A comes from PC
 );
     //internal signals
     logic [6:0] opcode;
@@ -32,6 +34,7 @@ always_comb begin
     jalr       = 1'b0;
     alu_op     = ALU_ADD;
     imm_type   = IMM_I;
+    alu_a_pc = 1'b0;
 case (opcode)
     7'b0110011: begin //If the instruction opcode is 0110011, this is an R-type ALU instruction
     //Control signals for all R-type instructions
@@ -164,6 +167,30 @@ case (opcode)
         alu_op     = ALU_ADD;
         jalr       = 1'b1;
         end
+    end
+
+    //LUI
+    7'b0110111: begin 
+        reg_write  = 1;       
+        mem_write  = 0;      
+        result_src = RES_IMM;  //write the immediate directly
+        branch     = 0;
+        jump       = 0;
+        imm_type   = IMM_U;
+        //ALU is bypassed, output straight to wrtieback
+    end
+
+    //AUIPC
+    7'b0010111: begin 
+        reg_write  = 1'b1;
+        alu_a_pc   = 1'b1;   //alu A comes from pc    
+        alu_src    = 1'b1; //alu B = immeidate
+        alu_op     = ALU_ADD; 
+        result_src = RES_ALU;
+        imm_type   = IMM_U;
+        mem_write  = 1'b0;
+        branch     = 1'b0;
+        jump       = 1'b0;
     end
 
     //if the opcode is not 0110011, don’t enter the R-type decode block.
