@@ -113,6 +113,74 @@ module rv32i_decoder_tb;
     end
     endtask
 
+    //LW task test
+    task test_lw
+    begin
+        instruction = 32'd0;
+        instruction [6:0] = 7'b0000011;
+        instruction[14:12] = 3'b010;
+
+        #1;
+
+        assert (reg_write == 1'b1)
+            else $error("LW reg_write failed");
+
+        assert (alu_src == 1'b1)
+            else $error("LW alu_src failed");
+
+        assert (mem_write == 1'b0)
+            else $error("LW mem_write failed");
+
+        assert (result_src == RES_MEM)
+            else $error("LW result_src failed");
+
+        assert (branch == 1'b0)
+            else $error("LW branch failed");
+
+        assert (jump == 1'b0)
+            else $error("LW jump failed");
+
+        assert (imm_type == IMM_I)
+            else $error("LW imm_type failed");
+
+        assert (alu_op == ALU_ADD)
+            else $error("LW alu_op failed");
+    end
+    endtask
+
+    //SW task test
+    task test_sw
+    begin
+        instruction = 32'd0;
+        instruction [6:0] = 7'b0100011;
+        instruction[14:12] = 3'b010;
+
+        #1;
+
+        assert (reg_write == 1'b0)
+            else $error("SW reg_write failed");
+
+        assert (alu_src == 1'b1)
+            else $error("SW alu_src failed");
+
+        assert (mem_write == 1'b1)
+            else $error("SW mem_write failed");
+
+        assert (branch == 1'b0)
+            else $error("SW branch failed");
+
+        assert (jump == 1'b0)
+            else $error("SW jump failed");
+
+        assert (imm_type == IMM_S)
+            else $error("SW imm_type failed");
+
+        assert (alu_op == ALU_ADD)
+            else $error("SW alu_op failed");
+    end
+    endtask
+
+
     initial begin
     // R-TYPE TESTS
         test_r_type(
@@ -230,8 +298,11 @@ module rv32i_decoder_tb;
             ALU_SRA
         ); // SRAI
 
+        test_lw();
 
-        $display("R-type and I-type decoder tests passed!");
+        test_sw();
+
+        $display("R-type, I-type decoder, load and store tests passed!");
 
         $finish;
 
