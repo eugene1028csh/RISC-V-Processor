@@ -9,6 +9,7 @@ module rv32i_decoder(
     output result_src_t result_src,
     output logic        branch,
     output logic        jump,
+    output logic        jalr,
     output alu_op_t      alu_op,
     output imm_type_t    imm_type
 );
@@ -28,6 +29,7 @@ always_comb begin
     result_src = RES_ALU;
     branch     = 1'b0;
     jump       = 1'b0;
+    jalr       = 1'b0;
     alu_op     = ALU_ADD;
     imm_type   = IMM_I;
 case (opcode)
@@ -79,7 +81,7 @@ case (opcode)
 
         case (funct3)
 
-            3'b000: alu_op = ALU_ADD;    // ADDI
+            3'b000: alu_op = ALU_ADD;    //ADDI
 
             3'b010: alu_op = ALU_SLT;    // SLTI
 
@@ -95,7 +97,7 @@ case (opcode)
 
             3'b101: begin
                 if (funct7 == 7'b0100000)
-                    alu_op = ALU_SRA;    // SRAI
+                    alu_op = ALU_SRA;    //SRAI
                 else
                     alu_op = ALU_SRL;    // SRLI
             end
@@ -105,7 +107,8 @@ case (opcode)
         endcase
     end
 
-    7'b000011: begin //Load
+    //Load
+    7'b000011: begin 
         reg_write  = 1'b1;
         alu_src    = 1'b1;
         mem_write  = 1'b0;
@@ -116,7 +119,8 @@ case (opcode)
         alu_op     = ALU_ADD;
     end
 
-    7'b0100011: begin   //Store
+    //Store
+    7'b0100011: begin  
         reg_write  = 1'b0;
         alu_src    = 1'b1;
         mem_write  = 1'b1;
@@ -127,12 +131,39 @@ case (opcode)
         alu_op     = ALU_ADD;
     end
 
-    7'b1100011: begin   // BRANCH
+    //Branch
+    7'b1100011: begin 
         reg_write = 1'b0;
         mem_write = 1'b0;
         branch    = 1'b1;
         jump      = 1'b0;
         imm_type  = IMM_B;
+    end
+
+    //JAL
+    7'b1101111: begin
+        reg_write  = 1'b1;
+        mem_write  = 1'b0;
+        result_src = RES_PC4;
+        branch     = 1'b0;
+        jump       = 1'b1;
+        imm_type   = IMM_J;
+
+    end
+
+    //JALR
+    7'b1100111: begin  
+        if (funct3 == 3'b000) begin
+        reg_write  = 1'b1;
+        alu_src    = 1'b1;
+        mem_write  = 1'b0;
+        result_src = RES_PC4;
+        branch     = 1'b0;
+        jump       = 1'b1;
+        imm_type   = IMM_I;
+        alu_op     = ALU_ADD;
+        jalr       = 1'b1;
+        end
     end
 
     //if the opcode is not 0110011, don’t enter the R-type decode block.

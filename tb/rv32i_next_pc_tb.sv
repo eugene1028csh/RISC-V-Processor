@@ -6,6 +6,9 @@ module rv32i_next_pc_tb;
     logic branch;
     logic branch_taken;
     logic [31:0] next_pc;
+    logic jump;
+    logic [31:0] rs1_data;
+    logic jalr;
 
     rv32i_next_pc dut(
         .pc(pc),
@@ -48,6 +51,35 @@ module rv32i_next_pc_tb;
 
         assert (next_pc == 32'd107)
             else $error("1b 1bt test failed");
+
+        //JAL
+        rs1_data = 32'd0;
+        pc = 32'd100;
+        immediate = 32'd16;
+        branch = 1'b0;
+        branch_taken = 1'b0;
+        jump = 1'b1;
+        jalr = 1'b0;
+
+        #1;
+
+        assert (next_pc == 32'd116)
+            else $error("JAL test failed");
+
+        //JALR
+        pc = 32'd100;
+        immediate = 32'd7;
+        branch = 1'b0;
+        branch_taken = 1'b0;
+        jump = 1'b1;
+        jalr = 1'b1;
+        rs1_data = 32'd100;
+
+        #1;
+
+        assert (next_pc == 32'd106)
+            else $error("JALR test failed");
+        
 
     $display("Next PC test passed");
     $finish;
