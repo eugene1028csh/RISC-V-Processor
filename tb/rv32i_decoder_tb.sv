@@ -180,6 +180,31 @@ module rv32i_decoder_tb;
     end
     endtask
 
+    task test_branch;
+    begin
+        instruction = 32'd0;
+        instruction[6:0]   = 7'b1100011;  // branch opcode
+        instruction[14:12] = 3'b000;      // BEQ for this test
+
+        #1;
+
+        assert (reg_write == 1'b0)
+            else $error("Branch reg_write failed");
+
+        assert (mem_write == 1'b0)
+            else $error("Branch mem_write failed");
+
+        assert (branch == 1'b1)
+            else $error("Branch signal failed");
+
+        assert (jump == 1'b0)
+            else $error("Branch jump failed");
+
+        assert (imm_type == IMM_B)
+            else $error("Branch imm_type failed");
+    end
+    endtask
+
 
     initial begin
     // R-TYPE TESTS
@@ -301,6 +326,8 @@ module rv32i_decoder_tb;
         test_lw();
 
         test_sw();
+
+        test_branch();
 
         $display("R-type, I-type decoder, load and store tests passed!");
 

@@ -127,6 +127,14 @@ case (opcode)
         alu_op     = ALU_ADD;
     end
 
+    7'b1100011: begin   // BRANCH
+        reg_write = 1'b0;
+        mem_write = 1'b0;
+        branch    = 1'b1;
+        jump      = 1'b0;
+        imm_type  = IMM_B;
+    end
+
     //if the opcode is not 0110011, don’t enter the R-type decode block.
     default: begin
         // Keep safe defaults
