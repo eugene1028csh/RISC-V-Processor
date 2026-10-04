@@ -20,11 +20,11 @@ module rv32i_imem_tb;
 
 
         //Address 0, mem[0] test
-        addr = 32'd0
-        #1
+        addr = 32'd0;
+        #1;
 
         assert (instruction == 32'h11111111)
-            else $error("IMEM address 0 failed :()")
+            else $error("IMEM address 0 failed :()");
 
         //Address 4, mem[1] test
         addr = 32'd4;
