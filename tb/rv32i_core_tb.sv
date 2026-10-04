@@ -39,7 +39,9 @@ module rv32i_core_tb;
 
         reset = 1'b0;
 
-        
+        //execute instruction 4 times
+        //Use 4 because test program has 4 instructions
+        //Since this is a single-cycle CPU, each instruction completes in one clock cycle.
         repeat (4) begin
             @(posedge clk);
             #1;
