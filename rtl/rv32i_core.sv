@@ -6,6 +6,7 @@ module rv32i_core (
 );
     logic [31:0] pc;
     logic [31:0] next_pc;
+    logic [31:0] pc_plus4;
     logic [31:0] instruction;
 
     logic [4:0]  rs1_addr;
