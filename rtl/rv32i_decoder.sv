@@ -36,8 +36,37 @@ always_comb begin
     imm_type   = IMM_I;
     alu_a_pc = 1'b0;
 case (opcode)
-    7'b0110011: begin //If the instruction opcode is 0110011, this is an R-type ALU instruction
-    //Control signals for all R-type instructions
+    7'b0110011: begin
+        // XiCRC custom instructions
+        if (funct7 == 7'b1000000) begin
+
+            alu_src    = 1'b0;
+            mem_write  = 1'b0;
+            branch     = 1'b0;
+            jump       = 1'b0;
+            jalr       = 1'b0;
+
+            case (funct3)
+
+                3'b000,   // CRCB
+                3'b001,   // CRCH
+                3'b010: begin // CRCW
+                    reg_write  = 1'b1;
+                    result_src = RES_CRC;
+                end
+
+                default: begin
+                    reg_write  = 1'b0;
+                    result_src = RES_ALU;
+                end
+
+            endcase
+
+        end
+
+        // Normal RV32I R-type instructions
+        else begin
+
             reg_write  = 1'b1;
             alu_src    = 1'b0;
             mem_write  = 1'b0;
@@ -46,16 +75,17 @@ case (opcode)
             jump       = 1'b0;
 
             case (funct3)
+
                 3'b000: begin
                     if (funct7 == 7'b0100000)
                         alu_op = ALU_SUB;
                     else
                         alu_op = ALU_ADD;
                 end
+
                 3'b111: alu_op = ALU_AND;
                 3'b110: alu_op = ALU_OR;
                 3'b100: alu_op = ALU_XOR;
-
                 3'b001: alu_op = ALU_SLL;
 
                 3'b101: begin
@@ -72,6 +102,7 @@ case (opcode)
 
             endcase
         end
+    end
 
     7'b0010011: begin   //Itype instructions
         reg_write  = 1'b1;
