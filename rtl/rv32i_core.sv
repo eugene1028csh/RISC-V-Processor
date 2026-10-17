@@ -24,6 +24,10 @@ module rv32i_core (
     logic [31:0] alu_result;
 
     logic [31:0] mem_read_data;
+    logic [31:0] crc_result;
+    logic        crc_ready;
+    logic        crc_writeback;
+    logic        crc_illegal;
 
     logic        reg_write;
     logic        alu_src;
@@ -56,6 +60,18 @@ module rv32i_core (
     assign rs1_addr = instruction[19:15];
     assign rs2_addr = instruction[24:20];
     assign rd_addr  = instruction[11:7];
+
+    xicrc_accelerator_unit xicrc_unit (
+        .ext_rs1_data   (rs1_data),
+        .ext_rs2_data   (rs2_data),
+        .ext_funct7     (instruction[31:25]),
+        .ext_funct3     (instruction[14:12]),
+
+        .ext_ready      (crc_ready),
+        .ext_result     (crc_result),
+        .ext_writeback  (crc_writeback),
+        .ext_illegal    (crc_illegal)
+    );
 
     //instantiating decoder
     rv32i_decoder decoder (
@@ -138,6 +154,9 @@ module rv32i_core (
 
             RES_IMM:
                 writeback_data = immediate;
+
+            RES_CRC:
+                writeback_data = crc_result;
 
             default:
                 writeback_data = 32'd0;
