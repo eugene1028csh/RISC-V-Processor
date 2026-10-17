@@ -24,7 +24,8 @@ package rv32i_types;
         RES_ALU,
         RES_MEM,
         RES_PC4,
-        RES_IMM
+        RES_IMM,
+        RES_CRC
     } result_src_t;
 
 endpackage
