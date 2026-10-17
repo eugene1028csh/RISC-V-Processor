@@ -20,7 +20,7 @@ package rv32i_types;
         IMM_J
     } imm_type_t;
 
-    typedef enum logic [1:0] {
+    typedef enum logic [2:0] {
         RES_ALU,
         RES_MEM,
         RES_PC4,
