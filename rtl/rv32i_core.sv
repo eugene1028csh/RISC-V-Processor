@@ -2,7 +2,15 @@ import rv32i_types::*;
 
 module rv32i_core (
     input logic clk,
-    input logic reset
+    input logic reset,
+
+    //mmio ports
+    output logic [31:0] bus_addr,
+    output logic [31:0] bus_write_data,
+    output logic        bus_write_en,
+
+    input  logic [31:0] bus_read_data,
+    input  logic        bus_hit
 );
     logic [31:0] pc;
     logic [31:0] next_pc;
@@ -24,6 +32,8 @@ module rv32i_core (
     logic [31:0] alu_result;
 
     logic [31:0] mem_read_data;
+    logic [31:0] dmem_read_data;
+    logic        dmem_write_en;
     logic [31:0] crc_result;
     logic        crc_ready;
     logic        crc_writeback;
@@ -127,16 +137,21 @@ module rv32i_core (
         .branch_taken(branch_taken)
     );
 
+    assign bus_addr       = alu_result;
+    assign bus_write_data = rs2_data;
+    assign bus_write_en   = mem_write;
+    assign dmem_write_en = mem_write && !bus_hit;
     rv32i_dmem dmem (
         .clk(clk),
-        .mem_write(mem_write),
+        .mem_write(dmem_write_en),
 
         .addr(alu_result),
         .write_data(rs2_data),
 
-        .read_data(mem_read_data)
+        .read_data(dmem_read_data)
     );
 
+    assign mem_read_data = bus_hit ? bus_read_data : dmem_read_data;
     assign pc_plus4 = pc + 32'd4;
 
     always_comb begin
